@@ -2,7 +2,7 @@
 #include<string>
 using namespace std;
 
-//bueno, vamos
+//hoal prueba 2
 
 class Libro{
 private:
