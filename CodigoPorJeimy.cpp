@@ -2,7 +2,7 @@
 #include<string>
 using namespace std;
 
-
+//esto es una blw
 
 class Libro{
 private:
