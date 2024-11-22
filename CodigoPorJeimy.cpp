@@ -1,5 +1,8 @@
+
+
 #include <iostream>
 #include <string>
+#include <limits> // Para numeric_limits
 using namespace std;
 
 // Clases del código base (simplificadas)
@@ -59,7 +62,7 @@ private:
     Estante estante1, estante2; // Solo dos estantes para simplificar
 
 public:
-    bool agregarEstante(const Estante& estante) {
+    bool agregarEstante(Estante& estante) {
         if (estante1.getId() == 0) {
             estante1 = estante;
             return true;
@@ -84,4 +87,97 @@ public:
             cout << "No hay estantes en la biblioteca.\n";
         }
     }
+
+    Estante& obtenerEstante(int id) {
+        if (id == 1) return estante1;
+        else if (id == 2) return estante2;
+        else throw invalid_argument("ID de estante inválido.");
+    }
 };
+
+// Función para agregar libros
+void agregarLibro(Biblioteca& biblioteca) {
+    string titulo;
+    int idEstante;
+
+    cout << "Ingrese el título del libro: ";
+    cin.ignore();
+    getline(cin, titulo);
+
+    cout << "Ingrese el ID del estante (1 o 2): ";
+    cin >> idEstante;
+
+    if (cin.fail() || (idEstante != 1 && idEstante != 2)) {
+        cout << "Entrada inválida. Intente nuevamente.\n";
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        return;
+    }
+
+    Libro nuevoLibro(titulo);
+    try {
+        Estante& estante = biblioteca.obtenerEstante(idEstante);
+        if (!estante.agregarLibro(nuevoLibro)) {
+            cout << "No se pudo agregar el libro al estante " << idEstante << ". Está lleno.\n";
+        }
+    } catch (const exception& e) {
+        cout << e.what() << endl;
+    }
+}
+
+// Función para mostrar los estantes
+void mostrarEstantes(Biblioteca& biblioteca) {
+    cout << "--- Contenido de la Biblioteca ---\n";
+    biblioteca.mostrarEstantes();
+    return;
+}
+
+// Menú principal
+void menu(Biblioteca& biblioteca) {
+    int opcion;
+
+    do {
+        cout << "\n--- Menude Biblioteca ---\n";
+        cout << "1. Agregar Libro\n";
+        cout << "2. Mostrar Estantes\n";
+        cout << "3. Salir\n";
+        cout << "Seleccione una opción: ";
+        cin >> opcion;
+
+        if (cin.fail()) { // Si la entrada no es un número
+            cout << "Entrada invalida. Intente nuevamente.\n";
+            cin.clear(); // Limpiar el estado de error
+            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Descartar entrada inválida
+            continue;
+        }
+
+        switch (opcion) {
+        case 1:
+            agregarLibro(biblioteca);
+            break;
+        case 2:
+            mostrarEstantes(biblioteca);
+            break;
+        case 3:
+            cout << "Saliendo del sistema...\n";
+            break;
+        default:
+            cout << "Opción inválida. Intente nuevamente.\n";
+        }
+    } while (opcion != 3);
+}
+
+// Función principal
+int main() {
+    Biblioteca biblioteca;
+    Estante estante1(1), estante2(2);
+
+    // Agregar estantes a la biblioteca
+    biblioteca.agregarEstante(estante1);
+    biblioteca.agregarEstante(estante2);
+
+    // Llamar al menú
+    menu(biblioteca);
+
+    return 0;
+}
