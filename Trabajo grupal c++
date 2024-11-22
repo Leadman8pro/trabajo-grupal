@@ -1,11 +1,10 @@
 
-
 #include <iostream>
 #include <string>
 #include <limits> // Para numeric_limits
 using namespace std;
 
-// Clases del código base (simplificadas)
+// Clase Libro
 class Libro {
 private:
     string titulo;
@@ -23,6 +22,7 @@ public:
     void setTitulo(const string& nuevoTitulo) { titulo = nuevoTitulo; }
 };
 
+// Clase Estante
 class Estante {
 private:
     int id;
@@ -48,6 +48,20 @@ public:
         return false;
     }
 
+    void removerLibro(int idLibro) {
+        if (libro1.getId() == idLibro) {
+            cout << "Libro '" << libro1.getTitulo() << "' removido del estante " << id << endl;
+            libro1 = Libro(); 
+            contadorLibros--;
+        } else if (libro2.getId() == idLibro) {
+            cout << "Libro '" << libro2.getTitulo() << "' removido del estante " << id << endl;
+            libro2 = Libro(); 
+            contadorLibros--;
+        } else {
+            cout << "Libro no encontrado en el estante.\n";
+        }
+    }
+
     void mostrarLibros() const {
         if (contadorLibros > 0) cout << "Libro 1: " << libro1.getTitulo() << "\n";
         if (contadorLibros > 1) cout << "Libro 2: " << libro2.getTitulo() << "\n";
@@ -57,6 +71,7 @@ public:
     int getId() const { return id; }
 };
 
+// Clase Biblioteca
 class Biblioteca {
 private:
     Estante estante1, estante2; // Solo dos estantes para simplificar
@@ -72,6 +87,18 @@ public:
         }
         cout << "No se pueden agregar más estantes.\n";
         return false;
+    }
+
+    void removerEstante(int id) {
+        if (estante1.getId() == id) {
+            cout << "Estante " << estante1.getId() << " removido.\n";
+            estante1 = Estante(); 
+        } else if (estante2.getId() == id) {
+            cout << "Estante " << estante2.getId() << " removido.\n";
+            estante2 = Estante(); 
+        } else {
+            cout << "Estante no encontrado.\n";
+        }
     }
 
     void mostrarEstantes() const {
